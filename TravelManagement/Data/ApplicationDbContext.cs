@@ -7,5 +7,6 @@ namespace TravelManagement.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
+        public DbSet<Airline> Airlines { get; set; }
     }
 }

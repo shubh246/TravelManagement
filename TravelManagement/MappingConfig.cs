@@ -12,6 +12,10 @@ namespace TravelManagement
             CreateMap<User, UserDTO>().ReverseMap();
 
             CreateMap<User, UserUpdateDTO>().ReverseMap();
+            CreateMap<Airline, AirlineCreateDTO>().ReverseMap();
+            CreateMap<Airline, AirlineDTO>().ReverseMap();
+
+            CreateMap<Airline, AirlineUpdateDTO>().ReverseMap();
         }
     }
 }
