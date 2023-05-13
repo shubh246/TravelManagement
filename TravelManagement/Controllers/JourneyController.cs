@@ -9,29 +9,29 @@ using TravelManagement.Repository;
 
 namespace TravelManagement.Controllers
 {
-    [Route("api/AirlineApi")]
+    [Route("api/JourneyApi")]
     [ApiController]
-    public class AirlineController : Controller
+    public class JourneyController : Controller
     {
-        private readonly IAirlineRepository dbairline;
+        private readonly IJourneyRepository dbjourney;
         private readonly ApplicationDbContext db;
         private readonly IMapper mapper;
         protected readonly ApiResponse response;
-        public AirlineController(IAirlineRepository _dbairline, IMapper _mapper, ApplicationDbContext _db)
+        public JourneyController(IJourneyRepository _dbjourney, IMapper _mapper, ApplicationDbContext _db)
         {
-            dbairline = _dbairline;
+            dbjourney = _dbjourney;
             db = _db;
             mapper = _mapper;
             this.response = new();
         }
         [HttpGet]
-        public async Task<ActionResult<ApiResponse>> GetAirline()
+        public async Task<ActionResult<ApiResponse>> GetJourney()
         {
             try
             {
-                IEnumerable<Airline> AirlineDTOList = await dbairline.GetAllAsync();
-                IEnumerable<AirlineDTO> VillaDtoList = mapper.Map<IEnumerable<AirlineDTO>>(AirlineDTOList);
-                response.Result = AirlineDTOList;
+                IEnumerable<Journey> JourneyDTOList = await dbjourney.GetAllAsync();
+                IEnumerable<JourneyDTO> JourneyDtoList = mapper.Map<IEnumerable<JourneyDTO>>(JourneyDTOList);
+                response.Result = JourneyDTOList;
                 response.StatusCode = HttpStatusCode.OK;
                 return Ok(response);
             }
@@ -43,11 +43,11 @@ namespace TravelManagement.Controllers
             }
             return response;
         }
-        [HttpGet("id", Name = "GetAirline")]
+        [HttpGet("id", Name = "GetJourney")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ApiResponse>> GetAirline(int id)
+        public async Task<ActionResult<ApiResponse>> GetJourney(int id)
         {
             try
             {
@@ -57,12 +57,12 @@ namespace TravelManagement.Controllers
                     return BadRequest();
                 }
 
-                var airline = await dbairline.GetAsync(u => u.Id == id);
-                if (airline== null)
+                var journey = await dbjourney.GetAsync(u => u.Id == id);
+                if (journey== null)
                 {
                     return NotFound();
                 }
-                response.Result = mapper.Map<AirlineDTO>(airline);
+                response.Result = mapper.Map<JourneyDTO>(journey);
                 response.StatusCode = HttpStatusCode.OK;
                 return Ok(response);
             }
@@ -78,27 +78,27 @@ namespace TravelManagement.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ApiResponse>> CreateAirline([FromBody] AirlineCreateDTO CreateDto)
+        public async Task<ActionResult<ApiResponse>> CreateJourney([FromBody] JourneyCreateDTO CreateDto)
         {
             try
             {
-                if (await dbairline.GetAsync(u => u.AirlineName.ToLower() == CreateDto.AirlineName.ToLower()) != null)
+                if (await dbjourney.GetAsync(u => u.FromCity.ToLower() == CreateDto.FromCity.ToLower()) != null)
                 {
-                    ModelState.AddModelError("Custom Error", "Airline Already Exists");
+                    ModelState.AddModelError("Custom Error", "Journey Already Exists");
                     return BadRequest(ModelState);
                 }
                 if (CreateDto == null)
                 {
                     return BadRequest(CreateDto);
                 }
-                Airline airline = mapper.Map<Airline>(CreateDto);
+                Journey journey = mapper.Map<Journey>(CreateDto);
                 
-                await dbairline.CreateAsync(airline);
-                response.Result = mapper.Map<AirlineDTO>(airline);
+                await dbjourney.CreateAsync(journey);
+                response.Result = mapper.Map<JourneyDTO>(journey);
                 response.StatusCode = HttpStatusCode.Created;
 
 
-                return CreatedAtRoute("GetUser", new { id = airline.Id }, response);
+                return CreatedAtRoute("GetJourney", new { id = journey.Id }, response);
             }
             catch (Exception ex)
             {
@@ -107,8 +107,8 @@ namespace TravelManagement.Controllers
             }
             return response;
         }
-        [HttpDelete("{id:int}", Name = "DeleteAirline")]
-        public async Task<ActionResult<ApiResponse>> DeleteAirline(int id)
+        [HttpDelete("{id:int}", Name = "DeleteJourney")]
+        public async Task<ActionResult<ApiResponse>> DeleteJourney(int id)
         {
             try
             {
@@ -116,12 +116,12 @@ namespace TravelManagement.Controllers
                 {
                     return BadRequest();
                 }
-                var airline = await dbairline.GetAsync(v => v.Id == id);
-                if (airline == null)
+                var journey = await dbjourney.GetAsync(v => v.Id == id);
+                if (journey == null)
                 {
                     return NotFound();
                 }
-                await dbairline.RemoveAsync(airline);
+                await dbjourney.RemoveAsync(journey);
                 //response.Result = mapper.Map<VillaDto>(villa);
                 response.StatusCode = HttpStatusCode.NoContent;
                 response.IsSuccess = true;
@@ -134,30 +134,27 @@ namespace TravelManagement.Controllers
             }
             return response;
         }
-        [HttpPut("{id:int}", Name = "UpdateAirline")]
-        public async Task<ActionResult<ApiResponse>> UpdateUser(int id, [FromBody] AirlineUpdateDTO updateDto)
+        [HttpPut("{id:int}", Name = "UpdateJourney")]
+        public async Task<ActionResult<ApiResponse>> UpdateJourney(int id, [FromBody] JourneyUpdateDTO updateDto)
         {
             try
             {
-                
-               
                 if (updateDto == null || id != updateDto.Id)
                 {
                     return BadRequest();
                 }
-                var villa = await dbairline.GetAsync(v => v.Id == id, tracked: true);
+                var villa = await dbjourney.GetAsync(v => v.Id == id, tracked: true);
                 if (villa == null)
                 {
                     // Handle the case when the journey with the given id doesn't exist
                     return NotFound();
                 }
                 db.Entry(villa).State = EntityState.Detached;
-                
 
-                Airline model = mapper.Map<Airline>(updateDto);
-                db.Entry(model).State = EntityState.Modified;
 
-                await dbairline.UpdateAsync(model);
+                Journey model = mapper.Map<Journey>(updateDto);
+
+                await dbjourney.UpdateAsync(model);
                 response.StatusCode = HttpStatusCode.NoContent;
                 response.IsSuccess = true;
                 return Ok(response);

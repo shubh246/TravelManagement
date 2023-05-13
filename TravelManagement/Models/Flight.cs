@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TravelManagement.Models
 {
-    public class Airline
+    public class Flight
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -11,12 +11,15 @@ namespace TravelManagement.Models
         [Required]
         [RegularExpression("^[a-zA-Z ]+$")]
         [StringLength(50)]
-        public string AirlineName { get; set; }
-        //[ForeignKey("Flight")]
+        public string FlightName { get; set; }
+
         [RegularExpression("^[a-zA-Z0-9 ]+$")]
         [StringLength(10)]
+        public string FlightCode { get; set; }
+        [Required]
+        
+        [StringLength(10)] // Make sure this matches the length of AirlineCode in the Airline model
         public string AirlineCode { get; set; }
         
-
     }
 }

@@ -31,11 +31,7 @@ namespace TravelManagement.Controllers
                 response.StatusCode = HttpStatusCode.OK;
                 return Ok(response);
             }
-            // return Ok( await db.Villas.ToListAsync());
-            /*return new List<VillaDto>{
-            new VillaDto{Id=1,Name="Shubham"},
-           new VillaDto{Id=2,Name="Shubham23"}
-        };*/
+            
             catch (Exception ex)
             {
                 response.IsSuccess = false;
@@ -51,7 +47,7 @@ namespace TravelManagement.Controllers
         {
             try
             {
-                //logger.Log("Geetting all villas","");
+                
                 if (id == 0)
                 {
                     return BadRequest();
@@ -84,7 +80,7 @@ namespace TravelManagement.Controllers
             {
                 if (await dbuser.GetAsync(u => u.Name.ToLower() == CreateDto.Name.ToLower()) != null)
                 {
-                    ModelState.AddModelError("Custom Error", "Villa Already Exists");
+                    ModelState.AddModelError("Custom Error", "User Already Exists");
                     return BadRequest(ModelState);
                 }
                 if (CreateDto == null)
@@ -92,23 +88,7 @@ namespace TravelManagement.Controllers
                     return BadRequest(CreateDto);
                 }
                 User user = mapper.Map<User>(CreateDto);
-                //if (villaDto.Id > 0)
-                //{
-                //    return StatusCode(StatusCodes.Status500InternalServerError);
-                //}
-                //Villa model = new()
-                //{
-                //    Amenity = villaDto.Amenity, 
-                //    Details = villaDto.Details,
-                //    //Id=villaDto.Id,
-                //    ImageUrl=villaDto.ImageUrl,
-                //    Name=villaDto.Name,
-                //    Occupancy=villaDto.Occupancy,
-                //    Rate=villaDto.Rate,
-                //    Sqft=villaDto.Sqft,
-                //};
-                //await db.Villas.AddAsync(model);
-                // db.SaveChanges();
+                
                 await dbuser.CreateAsync(user);
                 response.Result = mapper.Map<UserDTO>(user);
                 response.StatusCode = HttpStatusCode.Created;
@@ -160,21 +140,9 @@ namespace TravelManagement.Controllers
                     return BadRequest();
                 }
                 var villa = await dbuser.GetAsync(v => v.Id == id, tracked: false);
-                /*villa.Name=villaDto.Name;   
-                villa.Sqft = villaDto.Sqft; 
-                villa.Occupancy= villaDto.Occupancy;*/
+                
                 User model = mapper.Map<User>(updateDto);
-                //Villa model = new()
-                //{
-                //    Amenity = villaDto.Amenity,
-                //    Details = villaDto.Details,
-                //    Id = villaDto.Id,
-                //    ImageUrl = villaDto.ImageUrl,
-                //    Name = villaDto.Name,
-                //    Occupancy = villaDto.Occupancy,
-                //    Rate = villaDto.Rate,
-                //    Sqft = villaDto.Sqft,
-                //};
+                
                 await dbuser.UpdateAsync(model);
                 response.StatusCode = HttpStatusCode.NoContent;
                 response.IsSuccess = true;

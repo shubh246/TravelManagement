@@ -1,22 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace TravelManagement.Models
+namespace TravelManagement.Models.Dto
 {
-    public class Airline
+    public class FlightCreateDTO
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         [Required]
         [RegularExpression("^[a-zA-Z ]+$")]
         [StringLength(50)]
-        public string AirlineName { get; set; }
-        //[ForeignKey("Flight")]
+        public string FlightName { get; set; }
+
         [RegularExpression("^[a-zA-Z0-9 ]+$")]
         [StringLength(10)]
+        public string FlightCode { get; set; }
         public string AirlineCode { get; set; }
-        
-
     }
 }

@@ -12,6 +12,8 @@ namespace TravelManagement.Repository
         public Repository(ApplicationDbContext _db)
         {
             db = _db;
+            db.Journeys.Include(u => u.Flight).ToList();
+            db.Journeys.Include(u => u.Airline).ToList();
             this.dbSet = db.Set<T>();
 
 

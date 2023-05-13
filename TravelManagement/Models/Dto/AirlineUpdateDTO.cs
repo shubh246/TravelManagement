@@ -17,5 +17,6 @@ namespace TravelManagement.Models.Dto
         [RegularExpression("^[a-zA-Z0-9 ]+$")]
         [StringLength(10)]
         public string AirlineCode { get; set; }
+        //public ICollection<Flight> Flights { get; set; }
     }
 }
