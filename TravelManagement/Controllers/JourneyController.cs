@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Net;
 using TravelManagement.Data;
 using TravelManagement.Models;
@@ -91,6 +94,12 @@ namespace TravelManagement.Controllers
                 {
                     return BadRequest(CreateDto);
                 }
+                var airline = db.Airlines.FirstOrDefault(a => a.Id == CreateDto.AirlineId);
+                var flight = db.Flights.FirstOrDefault(f => f.Id == CreateDto.FlightId);
+                if (airline == null || flight == null) { 
+                    return BadRequest("Invalid AirlineId or FlightId");
+            
+            }
                 Journey journey = mapper.Map<Journey>(CreateDto);
                 
                 await dbjourney.CreateAsync(journey);
@@ -107,6 +116,7 @@ namespace TravelManagement.Controllers
             }
             return response;
         }
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id:int}", Name = "DeleteJourney")]
         public async Task<ActionResult<ApiResponse>> DeleteJourney(int id)
         {
@@ -152,7 +162,15 @@ namespace TravelManagement.Controllers
                 db.Entry(villa).State = EntityState.Detached;
 
 
+                var airline = db.Airlines.FirstOrDefault(a => a.Id == updateDto.AirlineId);
+                var flight = db.Flights.FirstOrDefault(f => f.Id == updateDto.FlightId);
+                if (airline == null || flight == null)
+                {
+                    return BadRequest("Invalid AirlineId or FlightId");
+
+                }
                 Journey model = mapper.Map<Journey>(updateDto);
+                
 
                 await dbjourney.UpdateAsync(model);
                 response.StatusCode = HttpStatusCode.NoContent;

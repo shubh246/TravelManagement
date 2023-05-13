@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Net;
 using TravelManagement.Data;
 using TravelManagement.Models;
@@ -102,7 +104,7 @@ namespace TravelManagement.Controllers
                 response.StatusCode = HttpStatusCode.Created;
 
 
-                return CreatedAtRoute("GetUser", new { id = flight.Id }, response);
+                return CreatedAtRoute("GetFlight", new { id = flight.Id }, response);
             }
             catch (Exception ex)
             {
@@ -119,7 +121,7 @@ namespace TravelManagement.Controllers
                 return db.Airlines.Any(a => a.AirlineCode == airlineCode);
             
         }
-
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id:int}", Name = "DeleteFlight")]
         public async Task<ActionResult<ApiResponse>> DeleteFlight(int id)
         {

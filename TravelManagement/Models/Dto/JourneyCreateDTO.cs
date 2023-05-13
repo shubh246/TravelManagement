@@ -18,6 +18,7 @@ namespace TravelManagement.Models.Dto
         public string AirlineCode { get; set; }
         public int FlightId { get; set; }
         public int AirlineId { get; set; }
-        
+        public int NumberofPassengers { get; set; }
+
     }
 }

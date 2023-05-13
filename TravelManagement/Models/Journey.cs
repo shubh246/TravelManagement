@@ -24,6 +24,7 @@ namespace TravelManagement.Models
         public int AirlineId { get; set; }
        public Flight Flight { get; set; }
        public Airline Airline { get; set; }
+        public int NumberofPassengers { get; set; }
 
     }
 }

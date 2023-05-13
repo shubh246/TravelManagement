@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Net;
 using TravelManagement.Data;
 using TravelManagement.Models;
@@ -107,6 +109,7 @@ namespace TravelManagement.Controllers
             }
             return response;
         }
+        [Authorize]
         [HttpDelete("{id:int}", Name = "DeleteAirline")]
         public async Task<ActionResult<ApiResponse>> DeleteAirline(int id)
         {
