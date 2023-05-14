@@ -170,7 +170,8 @@ namespace TravelManagement.Controllers
 
                 }
                 Journey model = mapper.Map<Journey>(updateDto);
-                
+                db.Entry(model).State = EntityState.Modified;
+
 
                 await dbjourney.UpdateAsync(model);
                 response.StatusCode = HttpStatusCode.NoContent;
