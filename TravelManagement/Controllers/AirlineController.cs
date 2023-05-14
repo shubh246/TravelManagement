@@ -148,13 +148,13 @@ namespace TravelManagement.Controllers
                 {
                     return BadRequest();
                 }
-                var villa = await dbairline.GetAsync(v => v.Id == id, tracked: true);
-                if (villa == null)
+                var airline = await dbairline.GetAsync(v => v.Id == id, tracked: true);
+                if (airline == null)
                 {
                     // Handle the case when the journey with the given id doesn't exist
                     return NotFound();
                 }
-                db.Entry(villa).State = EntityState.Detached;
+                db.Entry(airline).State = EntityState.Detached;
                 
 
                 Airline model = mapper.Map<Airline>(updateDto);
